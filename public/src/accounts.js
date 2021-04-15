@@ -32,19 +32,30 @@ function sortAccountsByLastName(accounts) {
 
 function getTotalNumberOfBorrows(account, books) {
   //returns a number for however many times a person borrowed that book.
-  let foundNumber = books.borrows.id.find((account, book) => account.id === books.borrows.id);
 
-  //return parks.filter((park) => wishlist.includes(park.id))
-  //let foundNumber = books.borrows.id.filter((id) => books.borrows.id === id);
-  return foundNumber.length;
+  return books.reduce((acc, {borrows}) => {
+    return acc+(borrows.filter( (borrow) => borrow.id === account.id).length )
+  },0)
+
+  //reduce takes an array of objects and reducing it to a single number.
 }
 
 function getBooksPossessedByAccount(account, books, authors) {
   //returns all books a person is currently borrowing.
   //The author object is nested within the book object.
-  let foundBooks = book.borrows.id.find((account, book) => account.id===book.borrows.id);
+  //let foundBooks = books.borrows.id.find((account, book) => account.id===book.borrows.id);
   //reduce method to nest author inside of book
+  let bookIsCheckedOutByAccount = books.filter((book) => {
+    return accountBorrowedThisBook = book.borrows.some((borrow) => borrow.id ===account.id && borrow.returned === false);
+  });
   
+  let fullBookInfo = bookIsCheckedOutByAccount.map((bookInfo) => {
+    let {authorId} = bookInfo;
+    let [author] = authors.filter((author) => author.id === authorId);
+    bookInfo.author = author;
+    return bookInfo;
+  });
+  return fullBookInfo;
 }
 
 module.exports = {
